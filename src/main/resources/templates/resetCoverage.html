@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <link th:href="@{/static/css/combo.select.css}" rel="stylesheet" media="all">
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/jquery.combo.select.js}"></script>
+    <script>
+        $(function(){
+            $("#hf-projectName").comboSelect();
+        });
+    </script>
+</head>
+<body>
+
+<div class="col-lg-6">
+<div th:fragment="resetCoverage" class="card">
+    <div class="card-header">
+        <strong>项目信息</strong>
+    </div>
+    <div class="card-body card-block">
+        <form  id="resetCoverage" method="post" class="form-horizontal">
+            <div class="row form-group">
+                <div class="col col-md-2">
+                    <label for="hf-projectName" class=" form-control-label">应用名称:</label>
+                </div>
+                <div class="col-lg-8 col-md-8">
+
+                    <select name="hf-projectName" id="hf-projectName" class="form-control-sm form-control" th:onchange="'javascript:selectIPByProjectName()'">
+                        <option value="0">--请选择--</option>
+                        <option   th:each="p:${projectList}"  th:value="${p.projectName}" th:text="${p.projectName}" value="1"></option>
+
+                    </select>
+                </div>
+            </div>
+
+        <div class="row form-group">
+            <div class="col col-md-2">
+                <label for="hf-ip" class=" form-control-label">服务IP:</label>
+            </div>
+            <div class="col-lg-8 col-md-8">
+                <select name="hf-ip" id="hf-ip" class="form-control-sm form-control">
+                    <option value="0">--请选择--</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="text-align: center">
+        <button type="button" class="btn btn-success" th:onclick="'javascript:resetCoverage()'" >重置覆盖率</button>
+        </div>
+        <br/>
+        </form>
+    </div>
+
+
+</div>
+</div>
+</body>
+
+</html>

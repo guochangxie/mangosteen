@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <!-- Fontfaces CSS-->
+    <link th:href="@{/static/css/font-face.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/font-awesome-4.7/css/font-awesome.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/font-awesome-5/css/fontawesome-all.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/mdi-font/css/material-design-iconic-font.min.css}" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link th:href="@{/static/vendor/bootstrap-4.1/bootstrap.min.css}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link th:href="@{/static/vendor/animsition/animsition.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/wow/animate.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/css-hamburgers/hamburgers.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/slick/slick.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/select2/select2.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/perfect-scrollbar/perfect-scrollbar.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/vector-map/jqvmap.min.css}" rel="stylesheet" media="all">
+    <!-- Main CSS-->
+    <link th:href="@{/static/css/theme.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/css/jquery-ui.css}" rel="stylesheet" media="all">
+
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-2.0.3.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/jquery-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/sockjs.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/stomp.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+
+</head>
+
+<body >
+
+<div class="page-wrapper">
+    <!-- MENU SIDEBAR-->
+    <div th:replace="menu::menu"></div>
+    <div class="page-container2">
+        <div th:replace="header::header"></div>
+        <!-- END BREADCRUMB-->
+        <div th:if="${templatename}!=null">
+         <div th:replace="${templatename}::${templatename}"></div>
+        </div>
+        <div th:if="${templatename}==null">
+            <div th:replace="projectList::projectList"></div>
+        </div>
+        <!-- END PAGE CONTAINER-->
+    </div>
+    <div th:replace="foot::foot"></div>
+
+</div>
+<script th:src="@{/static/js/main.js}"></script>
+</body>
+</html>

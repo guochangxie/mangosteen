@@ -1,0 +1,95 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+    <title>Login</title>
+    <link th:href="@{/static/css/font-face.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/font-awesome-4.7/css/font-awesome.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/font-awesome-5/css/fontawesome-all.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/mdi-font/css/material-design-iconic-font.min.css}" rel="stylesheet" media="all">
+
+    <link th:href="@{/static/vendor/bootstrap-4.1/bootstrap.min.css}" rel="stylesheet" media="all">
+
+    <link th:href="@{/static/vendor/animsition/animsition.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/wow/animate.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/css-hamburgers/hamburgers.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/slick/slick.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/select2/select2.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/vendor/perfect-scrollbar/perfect-scrollbar.css}" rel="stylesheet" media="all">
+    <link th:href="@{/static/css/theme.css}" rel="stylesheet" media="all">
+
+    <script type="text/javascript" th:src="@{/static/js/jquery-2.0.3.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/jquery-ui.js}"></script>
+    <!--
+    <script type="text/javascript" th:src="@{/static/js/sockjs.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/stomp.min.js}"></script>
+    -->
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <div class="page-content--bge5">
+            <div class="container">
+                <div class="login-wrap">
+                    <div class="login-content">
+                        <div class="login-logo">
+                            <a href="#">
+                                 Mangosteen代码覆盖率监控系统
+                            </a>
+                        </div>
+                        <div class="login-form">
+                            <form  id="loginForm" method="post">
+                                <div class="form-group">
+                                    <label>用户名</label>
+                                    <input class="au-input au-input--full" type="userName" name="userName" placeholder="用户名">
+                                </div>
+                                <div class="form-group">
+                                    <label>密码</label>
+                                    <input class="au-input au-input--full" type="password"  name="password" placeholder="密码">
+                                </div>
+
+                                <button class="au-btn au-btn--block au-btn--green m-b-20" th:onclick="'javascript:isLogin()'">登陆</button>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Jquery JS-->
+    <script th:src="@{/static/vendor/jquery-3.2.1.min.js}"></script>
+    <!-- Bootstrap JS-->
+    <script th:src="@{/static/vendor/bootstrap-4.1/popper.min.js}"></script>
+    <script th:src="@{/static/vendor/bootstrap-4.1/bootstrap.min.js}"></script>
+    <!-- Vendor JS       -->
+    <script th:src="@{/static/vendor/slick/slick.min.js}">
+    </script>
+    <script th:src="@{/static/vendor/wow/wow.min.js}"></script>
+    <script th:src="@{/static/vendor/animsition/animsition.min.js}"></script>
+    <script th:src="@{/static/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js}">
+    </script>
+    <script th:src="@{/static/vendor/counter-up/jquery.waypoints.min.js}"></script>
+    <script th:src="@{/static/vendor/counter-up/jquery.counterup.min.js}">
+    </script>
+    <script th:src="@{/static/vendor/circle-progress/circle-progress.min.js}"></script>
+    <script th:src="@{/static/vendor/perfect-scrollbar/perfect-scrollbar.js}"></script>
+    <script th:src="@{/static/vendor/chartjs/Chart.bundle.min.js}"></script>
+    <script th:src="@{/static/vendor/select2/select2.min.js}">
+
+    </script>
+    <script th:src="@{/static/js/main.js}"></script>
+</body>
+
+</html>

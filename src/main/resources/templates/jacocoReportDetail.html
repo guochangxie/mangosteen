@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+
+</head>
+<body>
+
+<div th:fragment="jacocoReportDetail" class="card">
+    <!--
+    <div class="card-header">
+        <strong>应用信息</strong>
+    </div>
+    <div class="card-body card-block">
+        <!--<form action="" method="post" class="form-horizontal">
+            <div class="row form-group">
+                <div class="col col-md-3">
+                    <label for="hf-projectName" class=" form-control-label">应用名称:</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <input id="hf-projectName" name="hf-projectName" th:value="${projectName}"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col col-md-3">
+                    <label for="hf-codeBranch" class=" form-control-label">开发分支:</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <input  id="hf-codeBranch" name="hf-devBranch" th:value="${codeBranch}"
+                           class="form-control">
+                </div>
+            </div>
+
+        <div class="row form-group">
+            <div class="col col-md-3">
+                <label for="hf-ip" class=" form-control-label">服务器IP:</label>
+            </div>
+            <div class="col-12 col-md-9">
+                    <input  id="hf-ip" name="hf-devBranch" th:value="${serverIp}"
+                            class="form-control">
+            </div>
+        </div>
+    </div> -->
+    <iframe  th:src="@{${reportPath}}" id="reportIframe" scrolling="yes" onload="changeFrameHeight()" frameborder="0">
+
+    </iframe>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+
+</head>
+<body>
+
+<div class="col-lg-6">
+<div th:fragment="executeProject" class="card">
+    <div class="card-header">
+        <strong>项目信息</strong>
+    </div>
+    <div class="card-body card-block">
+        <form  id="buildReportForm" method="post" class="form-horizontal">
+            <div class="row form-group">
+                <div class="col col-md-2">
+                    <label for="hf-projectName" class=" form-control-label">应用名称:</label>
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <input id="hf-projectName" name="hf-projectName" th:value="${project.projectName}"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col col-md-2">
+                    <label for="hf-codeBranch" class=" form-control-label">开发分支:</label>
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <input  id="hf-codeBranch" name="hf-devBranch" th:value="${project.codeBranch}"
+                           class="form-control">
+                </div>
+            </div>
+
+        <div class="row form-group">
+            <div class="col col-md-2">
+                <label for="hf-ip" class=" form-control-label">服务IP:</label>
+            </div>
+            <div class="col-lg-8 col-md-8">
+                <select name="hf-ip" id="hf-ip" class="form-control-sm form-control" multiple="multiple">
+                    <option  th:selected="selected" th:each="c:${projectConfig}"  th:value="${c.serverIp}" th:text="${c.serverIp}" value="1"></option>
+                </select>
+            </div>
+        </div>
+            <br>
+            <br>
+        <div style="text-align: center">
+        <button type="button" class="btn btn-success" th:onclick="'javascript:buildReport(this)'" >构建全量覆盖率</button>
+            &nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-warning" th:onclick="'javascript:buildIncrementReport(this)'" >构建增量覆盖率</button>
+            &nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary" th:onclick="'javascript:buildLog()'" >查看日志</button>
+        </div>
+        <br/>
+        </form>
+
+            <div id="filelog-container" th:title="执行过程日志">
+                <div></div>
+            </div>
+
+
+    </div>
+
+
+</div>
+</div>
+</body>
+
+</html>

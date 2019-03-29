@@ -1,0 +1,82 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mangosteen.js}"></script>
+
+</head>
+<body>
+
+<div th:fragment="addProject" class="card">
+    <div class="card-header">
+        <strong>项目信息</strong>
+    </div>
+    <div class="card-body card-block">
+        <!--<form action="" method="post" class="form-horizontal">-->
+            <div class="row form-group">
+                <div class="col col-md-2">
+                    <label for="hf-projectName" class=" form-control-label">项目名称:</label>
+                </div>
+                <div class="col-12 col-md-8">
+                    <input id="hf-projectName" name="hf-projectName"
+                           class="form-control">
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col col-md-2">
+                    <label for="hf-codeBranch" class=" form-control-label">主干分支:</label>
+                </div>
+                <div class="col-12 col-md-8">
+                    <input  id="hf-codeBranch" name="hf-devBranch"
+                           class="form-control">
+                </div>
+            </div>
+
+        <!--</form>-->
+    </div>
+
+    <div class="card-header">
+        <strong>Tomcat信息</strong>
+    </div>
+    <div class="table-responsive table-responsive-data2">
+        <table id="tomcatTable" class="table table-data2">
+            <thead>
+            <tr>
+                <th>服务器ip</th>
+                <th>tomcat名称</th>
+                <th>dump端口</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tr class="tr-shadow">
+                <td>
+                    <input  name="hf-ip"
+                           class="form-control">
+                </td>
+                <td>
+                    <input  name="hf-tomcatName"
+                           class="form-control">
+                </td>
+                <td>
+                    <input  name="hf-dumpPort"
+                           class="form-control" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm" th:onclick="'javascript:addRow(this)'">添加</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-danger btn-sm" th:onclick="'javascript:delRow(this)'">删除</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card-footer">
+
+        <div style="text-align:center">
+          <button type="button" class=" btn btn-primary " th:onclick="'javascript:saveProject()'">保存</button>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

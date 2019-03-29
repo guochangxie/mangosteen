@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="projectList" class="top-campaign">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="au-breadcrumb-content">
+                        <div class="au-breadcrumb-left">
+                        </div>
+                        <button class="au-btn au-btn-icon au-btn--green" th:onclick="'javascript:addProject()'">
+                            <i class="zmdi zmdi-plus"></i><a >添加项目</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="title-3 m-b-30">项目列表</h3>
+
+    <div class="table-responsive table-responsive-data2">
+        <table class="table table-data2">
+            <tbody>
+
+            <div th:each="project:${projectList}">
+            <tr class="tr-shadow">
+                <td th:text="${project.projectName}" class="desc" ></td>
+                <td class="table-data-feature"><button class="btn btn-outline-success btn-sm" th:onclick="'javascript:toEexcuteProject(this)'">构建</button>
+                 &nbsp;<button type="button" class="btn btn-outline-warning btn-sm" th:onclick="'javascript:tobuildHistory(this)'">历史记录</button>
+                 &nbsp;<button type="button" class="btn btn-outline-primary btn-sm">项目配置</button></td>
+            </tr>
+            <tr class="spacer"></tr>
+            </div>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

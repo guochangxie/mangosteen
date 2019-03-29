@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body >
+
+<aside th:fragment="menu" class="menu-sidebar2">
+    <div class="logo">
+        <a th:href="@{/project/showProject}">
+            <img th:src="@{/static/images/icon/mangosteen.jpeg}" alt="Cool Admin" />
+        </a>
+    </div>
+    <div class="menu-sidebar2__content js-scrollbar1">
+
+        <nav class="navbar-sidebar2">
+            <ul class="list-unstyled navbar__list">
+                <li>
+                    <a th:href="@{/project/showProject}">
+                        <i class="fas fa-chart-bar"></i>项目管理</a>
+                </li>
+
+                <li>
+                    <a th:href="@{/project/toResetCoverage}">
+                        <i class="fas fa-desktop"></i>覆盖率重置</a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="zmdi zmdi-settings"></i>修改密码</a>
+                </li>
+
+
+
+            </ul>
+        </nav>
+    </div>
+</aside>
+</body>
+</html>
