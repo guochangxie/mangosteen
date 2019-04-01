@@ -1,0 +1,57 @@
+-- ----------------------------
+-- Table structure for tb_user
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_user`;
+CREATE TABLE `tb_user` (
+  `userName` varchar(20) COLLATE utf8_bin NOT NULL,
+  `passwd` varchar(32) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Table structure for tb_project
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_project`;
+CREATE TABLE `tb_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectName` varchar(50) COLLATE utf8_bin NOT NULL,
+  `projectGroup` varchar(50) COLLATE utf8_bin NOT NULL,
+  `codeBranch` varchar(200) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+-- ----------------------------
+-- Table structure for tb_projectConfig
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_projectConfig`;
+CREATE TABLE `tb_projectConfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) DEFAULT NULL,
+  `serverIp` varchar(25) COLLATE utf8_bin DEFAULT NULL,
+  `serverPort` int(5) DEFAULT NULL,
+  `serverContainer` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '容器(tomcat名称)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Table structure for tb_executeRecords
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_executeRecords`;
+CREATE TABLE `tb_executeRecords` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectName` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `codeBranch` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `diffUrl` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '和当前版本对比的分支，生成增量测试报告用',
+  `executeTime` datetime DEFAULT NULL,
+  `serverIp` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+  `reportPath` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+SET FOREIGN_KEY_CHECKS = 1;
