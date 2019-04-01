@@ -2,13 +2,11 @@ package com.mangosteen.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mangosteen.model.ExecuteRecords;
 import com.mangosteen.model.Project;
 import com.mangosteen.model.ProjectConfig;
 import com.mangosteen.service.JacocoService;
-import com.mangosteen.service.ProjectConfigService;
 import com.mangosteen.service.ProjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +32,6 @@ public class MangosteenProjectController {
     private static final Logger logger = LoggerFactory.getLogger(MangosteenProjectController.class);
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private ProjectConfigService projectConfigService;
     @Autowired
     private JacocoService jacocoService;
     @RequestMapping("/showProject")
@@ -94,12 +89,11 @@ public class MangosteenProjectController {
     @RequestMapping("/toExecuteProject")
     public String toExecuteProject(HttpServletRequest httpServletRequest, Model modelMap) {
         String projectName = httpServletRequest.getParameter("projectName");
-        modelMap.addAttribute("templatename", "executeProject");
         Project project = projectService.queryProjectByName(projectName);
-        List<ProjectConfig> projectConfigs=projectConfigService.queryProjectConfigByProjectId(project.getId());
+        List<ProjectConfig> projectConfigs=JSON.parseArray(project.getProjectConfig(), ProjectConfig.class);
         modelMap.addAttribute("project",project);
         modelMap.addAttribute("projectConfig",projectConfigs);
-
+        modelMap.addAttribute("templatename", "executeProject");
         return "index";
     }
 
@@ -123,34 +117,17 @@ public class MangosteenProjectController {
 
     @RequestMapping("/saveProject")
     @ResponseBody
-    public  String addProject(@RequestBody String request, HttpServletRequest httpServletRequest) {
-
-        JSONObject requestData = JSON.parseObject(request);
-        Project project=projectService.queryProjectByName(requestData.getString("projectName"));
-        if(project==null){
-            project=new Project();
+    public  String addProject(@RequestBody String request) {
+            JSONObject requestData = JSON.parseObject(request);
+            Project project=new Project();
             project.setProjectName(requestData.getString("projectName"));
             project.setCodeBranch(requestData.getString("codeBranch"));
+            project.setProjectConfig(requestData.getJSONArray("projectConfig").toString());
             projectService.saveProject(project);
-
-        }
-
-
-        JSONArray projectConfigArray = requestData.getJSONArray("projectConfig");
-        List<ProjectConfig> projectConfigs = new ArrayList<ProjectConfig>();
-        for (int i=0;i<projectConfigArray.size();i++){
-            JSONObject jsonObject = projectConfigArray.getJSONObject(i);
-            ProjectConfig projectConfig = jsonObject.toJavaObject(jsonObject, ProjectConfig.class);
-            projectConfig.setProjectId(project.getId());
-            projectConfigs.add(projectConfig);
-
-        }
-        projectService.saveProjectConfig(projectConfigs);
         return "SUCCESS";
     }
 
     @RequestMapping(value = "/reportDetail")
-
     public String toReport(HttpServletRequest httpServletRequest, Model modelMap) {
 
         modelMap.addAttribute("templatename", "jacocoReportDetail");
@@ -213,22 +190,22 @@ public class MangosteenProjectController {
     @RequestMapping("/resetCoverage")
     @ResponseBody
     public String resetCoverage(HttpServletRequest request){
-        String projectName = request.getParameter("projectName");
         String ip=request.getParameter("ip");
-        ProjectConfig projectConfig = projectConfigService.queryProjectConfigByProjectNameAndIp(projectName, ip);
-        boolean resetDump = jacocoService.resetDump(ip, projectConfig.getServerPort());
+        boolean resetDump = jacocoService.resetDump(StringUtils.substringBefore(ip,":"), StringUtils.substringAfter(ip,":"));
         if(resetDump){
             return "SUCCESS";
         }
         return "FAIL";
     }
 
-
     @RequestMapping("/queryServerIP")
     @ResponseBody
     public List<ProjectConfig> queryServerIP(HttpServletRequest request){
         String projectName = request.getParameter("projectName");
-        return projectConfigService.queryProjectConfigByProjectName(projectName);
+        Project project = projectService.queryProjectByName(projectName);
+        List<ProjectConfig> projectConfigs=JSON.parseArray(project.getProjectConfig(), ProjectConfig.class);
+
+        return projectConfigs;
     }
 
 

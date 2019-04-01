@@ -13,6 +13,8 @@ public class Project implements Serializable {
 
     private String codeBranch;
 
+    private String projectConfig;
+
     public int getId() {
         return id;
     }
@@ -45,6 +47,22 @@ public class Project implements Serializable {
 
     public void setCodeBranch(String codeBranch) {
         this.codeBranch = codeBranch;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getProjectConfig() {
+        return projectConfig;
+    }
+
+    public void setProjectConfig(String projectConfig) {
+        this.projectConfig = projectConfig;
     }
 
     @Override

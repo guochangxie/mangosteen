@@ -12,8 +12,8 @@ public interface ProjectMapper {
     @Select("select id,projectName,projectGroup,codeBranch from tb_project")
     List<Project> queryAllProject();
 
-    @Insert("INSERT INTO tb_project(`projectName`, `projectGroup`, `codeBranch`) VALUES " +
-            "(#{projectName}, 'default', #{codeBranch});")
+    @Insert("INSERT INTO tb_project(`projectName`, `projectGroup`, `codeBranch`,`projectConfig`) VALUES " +
+            "(#{projectName}, 'default', #{codeBranch},#{projectConfig});")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int saveProject(Project project);
 
@@ -25,6 +25,6 @@ public interface ProjectMapper {
             "</script>")
     void saveProjectConfig(@Param("projectConfigs") List<ProjectConfig> projectConfigs);
 
-    @Select("select id,projectName,projectGroup,codeBranch from tb_project where projectName=#{projectName}")
+    @Select("select id,projectName,projectGroup,codeBranch,projectConfig from tb_project where projectName=#{projectName}")
     Project queryProjectByName(String projectName);
 }

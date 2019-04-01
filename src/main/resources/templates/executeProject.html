@@ -38,7 +38,7 @@
             </div>
             <div class="col-lg-8 col-md-8">
                 <select name="hf-ip" id="hf-ip" class="form-control-sm form-control" multiple="multiple">
-                    <option  th:selected="selected" th:each="c:${projectConfig}"  th:value="${c.serverIp}" th:text="${c.serverIp}" value="1"></option>
+                    <option  th:selected="selected" th:each="c:${projectConfig}"  th:value="${c.serverIp} +':'+${c.serverPort}" th:text="${c.serverIp}+':'+${c.serverPort}" value="1"></option>
                 </select>
             </div>
         </div>

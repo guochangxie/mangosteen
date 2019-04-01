@@ -26,11 +26,6 @@ public class ProjectService {
         return projectMapper.saveProject(project);
     }
 
-    public void saveProjectConfig(List<ProjectConfig> projectConfigs) {
-        projectMapper.saveProjectConfig(projectConfigs);
-
-    }
-
     public Project queryProjectByName(String  projectName){
         return projectMapper.queryProjectByName(projectName);
     }

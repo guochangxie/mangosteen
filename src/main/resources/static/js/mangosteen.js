@@ -38,6 +38,8 @@ function saveProject() {
         success: function (data) {
             if(data=="SUCCESS"){
                 alert("添加项目成功!");
+                window.location.href="/mangosteen/project/showProject";
+                window.event.returnValue=false;
             }
         },
         error: function (err) {
@@ -225,7 +227,7 @@ function selectIPByProjectName() {
         success: function (data) {
             $("#hf-ip").empty();
             $.each(data,function(index,item){
-                var opt=$("<option value="+item.serverIp+">"+item.serverIp+"</option>")
+                var opt=$("<option value="+item.serverIp+":"+item.serverPort+">"+item.serverIp+":"+item.serverPort+"</option>")
                 $("#hf-ip").append(opt)
             });
         }

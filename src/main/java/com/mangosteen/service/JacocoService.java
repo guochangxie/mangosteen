@@ -42,9 +42,6 @@ public class JacocoService {
     private CodeRepository codeRepository;
 
     @Autowired
-    private ProjectConfigService projectConfigService;
-
-    @Autowired
     private UserMapper userMapper;
 
     /**
@@ -53,7 +50,7 @@ public class JacocoService {
      * @param port    服务端口
      */
 
-    public boolean visitDumpCommand(String address,int port,String saveFile){
+    public boolean visitDumpCommand(String address,String port,String saveFile){
 
         logger.info("visitDump....");
         File file=new File(saveFile);
@@ -64,7 +61,7 @@ public class JacocoService {
         client.setDump(true);
         ExecFileLoader execFileLoader = null;
         try {
-            execFileLoader = client.dump(address, port);
+            execFileLoader = client.dump(address, Integer.valueOf(port));
             execFileLoader.save(new File(saveFile+"jacoco-client.exec"), false);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -81,13 +78,13 @@ public class JacocoService {
      * @param port
      */
 
-    public boolean resetDump(String address,int port){
+    public boolean resetDump(String address,String port){
         ExecDumpClient client = new ExecDumpClient();
         client.setReset(true);
         client.setDump(false);
         //目标机器的ip和端口，对应着运行程序时javaagent参数里的ip和端口
         try {
-            client.dump(address, port);
+            client.dump(address, Integer.valueOf(port));
         } catch (IOException e) {
             logger.error("覆盖率重置失败，失败详情{}",e.getMessage());
             return false;
@@ -245,8 +242,7 @@ public class JacocoService {
 
 
             for (String ip:ips){
-                ProjectConfig projectConfig = projectConfigService.queryProjectConfigByProjectNameAndIp(executeRecords.getProjectName(), executeRecords.getServerIp());
-                boolean dumpResult = visitDumpCommand(ip, projectConfig.getServerPort(), baseFilePath + dumpFilePath);
+                boolean dumpResult = visitDumpCommand(StringUtils.substringBefore(ip,":"), StringUtils.substringAfter(ip,":"), baseFilePath + dumpFilePath);
                 if(!dumpResult){
                     dumpFlag=false;
                 }
@@ -281,7 +277,6 @@ public class JacocoService {
 
         return null;
     }
-
 
     public boolean isLogin(String userName,String passwd){
         String passWord = userMapper.queryPasswdByUserName(userName);

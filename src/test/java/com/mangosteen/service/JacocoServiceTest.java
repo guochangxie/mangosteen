@@ -71,8 +71,7 @@ public class JacocoServiceTest {
     @Test
     public void testPaseDiffFile() throws Exception {
         List<String> list = jacocoService.paseDiffFile("/Users/guochang.xie/Documents/tmp/zipkin-server_20180917-195835430_pos.txt");
-        System.out.printf(">>>>>>>");
-        System.out.println(list.toString());
+
     }
 
     /**
