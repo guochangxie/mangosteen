@@ -44,6 +44,17 @@ public class MangosteenProjectController {
         return "index";
     }
 
+    @RequestMapping("/delelteProject")
+    public String delelteProject(HttpServletRequest httpServletRequest, ModelMap modelMap) {
+
+        String projectName = httpServletRequest.getParameter("projectName");
+        projectService.deleteByProjectName(projectName);
+        List<Project> projectList = projectService.queryAllProject();
+        modelMap.addAttribute("templatename", "projectList");
+        modelMap.addAttribute("projectList", projectList);
+
+        return "index";
+    }
     /**
      * 跳转到添加项目页面
      *
@@ -70,8 +81,7 @@ public class MangosteenProjectController {
         String passwd=httpServletRequest.getParameter("password");
         boolean isLogin = jacocoService.isLogin(userName, passwd);
         if(isLogin){
-            httpServletRequest.getSession().setAttribute("userName",userName);
-
+            httpServletRequest.getSession().setAttribute("user",jacocoService.queryUserRole(userName));
             return "SUCCESS";
         }
         return "FAIL";
@@ -127,6 +137,18 @@ public class MangosteenProjectController {
         return "SUCCESS";
     }
 
+    @RequestMapping("/updateProject")
+    @ResponseBody
+    public  String updateProject(@RequestBody String request) {
+        JSONObject requestData = JSON.parseObject(request);
+        Project project=new Project();
+        project.setProjectName(requestData.getString("projectName"));
+        project.setCodeBranch(requestData.getString("codeBranch"));
+        project.setId(requestData.getInteger("projectId"));
+        project.setProjectConfig(requestData.getJSONArray("projectConfig").toString());
+        projectService.updateProjectById(project);
+        return "SUCCESS";
+    }
     @RequestMapping(value = "/reportDetail")
     public String toReport(HttpServletRequest httpServletRequest, Model modelMap) {
 
@@ -177,6 +199,19 @@ public class MangosteenProjectController {
 
         return "index";
     }
+
+    @RequestMapping("/toConfigProject")
+    public String toConfigProject(HttpServletRequest request,ModelMap modelMap){
+        String projectName = request.getParameter("projectName");
+        Project project = projectService.queryProjectByName(projectName);
+        List<ProjectConfig> projectConfigs=JSON.parseArray(project.getProjectConfig(), ProjectConfig.class);
+        modelMap.addAttribute("project", project);
+        modelMap.addAttribute("projectConfigs", projectConfigs);
+        modelMap.addAttribute("templatename", "updateProject");
+
+        return "index";
+    }
+
 
 
     @RequestMapping("/toResetCoverage")

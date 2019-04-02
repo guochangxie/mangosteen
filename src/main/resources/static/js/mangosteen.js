@@ -1,5 +1,7 @@
 
 function saveProject() {
+
+
     $("#hf-projectName").validate("项目名称");
     $("#hf-codeBranch").validate("开发分支");
     $("#tomcatTable input").each(function (){
@@ -23,6 +25,14 @@ function saveProject() {
 
     var projectName= $("#hf-projectName").val();
     var codeBranch= $("#hf-codeBranch").val();
+    var projectId='';
+    projectId=$("#hf-projectId").val();
+
+    var url="/mangosteen/project/saveProject/";
+
+    if (projectId!=''){
+        url="/mangosteen/project/updateProject/";
+    }
 
     $.ajax({
 
@@ -30,20 +40,21 @@ function saveProject() {
         data:JSON.stringify({
             "projectName":projectName,
             "codeBranch":codeBranch,
-            "projectConfig":tableData
+            "projectConfig":tableData,
+            "projectId":projectId
         }),
         //方法所在页面和方法名
-        url: "/mangosteen/project/saveProject/",
+        url: url,
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             if(data=="SUCCESS"){
-                alert("添加项目成功!");
+                alert("配置项目成功!");
                 window.location.href="/mangosteen/project/showProject";
                 window.event.returnValue=false;
             }
         },
         error: function (err) {
-            alert("添加项目错误!");
+            alert("配置项目错误!");
         }
     });
 
@@ -60,6 +71,39 @@ function  tobuildHistory(obj) {
     //window.location.href = "/mangosteen/project/toExecuteProject?projectName="+projectName;
     $.StandardPost("/mangosteen/project/tobuildHistory",{'projectName':projectName});
 }
+function  toConfigProject(obj) {
+    var projectName=$(obj).parent().parent().find("td").eq(0).text();
+    $.StandardPost("/mangosteen/project/toConfigProject",{'projectName':projectName});
+}
+function  delelteProject(obj) {
+
+
+    var projectName=$(obj).parent().parent().find("td").eq(0).text();
+
+    $.confirm({
+        title: '删除项目!',
+        content: '确认要删除'+projectName+'?',
+        type: 'red',
+        typeAnimated: true,
+        buttons: {
+            tryAgain: {
+                text: '确认',
+                btnClass: 'btn-red',
+                action: function(){
+                    $.StandardPost("/mangosteen/project/delelteProject",{'projectName':projectName});
+                }
+            },
+            close:  {
+                text:'取消',
+                action:function () {
+
+                }
+            }
+        }
+    });
+
+}
+
 
 function addRow(obj) {
 

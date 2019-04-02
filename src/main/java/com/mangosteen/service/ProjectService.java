@@ -38,4 +38,12 @@ public class ProjectService {
     public List<ExecuteRecords> queryExecuteRecordByProjectName(String projectName) {
         return executeRecordMapper.queryExecuteRecordByProjectName(projectName);
     }
+
+    public void updateProjectById(Project project){
+        projectMapper.updateProjectById(project);
+    }
+
+    public void deleteByProjectName(String projectName) {
+        projectMapper.deleteByProjectName(projectName);
+    }
 }

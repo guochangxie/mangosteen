@@ -107,6 +107,8 @@ public class ReportGenerator {
 	private void loadExecutionData() throws IOException {
 		execFileLoader = new ExecFileLoader();
 		execFileLoader.load(executionDataFile);
+
+
 	}
 
 	private IBundleCoverage analyzeStructure() throws IOException {

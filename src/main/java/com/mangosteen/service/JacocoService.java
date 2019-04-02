@@ -50,7 +50,7 @@ public class JacocoService {
      * @param port    服务端口
      */
 
-    public boolean visitDumpCommand(String address,String port,String saveFile){
+    public boolean visitDumpCommand(String saveFile,String ...ips){
 
         logger.info("visitDump....");
         File file=new File(saveFile);
@@ -61,8 +61,10 @@ public class JacocoService {
         client.setDump(true);
         ExecFileLoader execFileLoader = null;
         try {
-            execFileLoader = client.dump(address, Integer.valueOf(port));
-            execFileLoader.save(new File(saveFile+"jacoco-client.exec"), false);
+            for(String ip:ips){
+                execFileLoader = client.dump(StringUtils.substringBefore(ip,":"), Integer.valueOf(StringUtils.substringAfter(ip,":")));
+                execFileLoader.save(new File(saveFile+"jacoco-client.exec"), true);
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
             return false;
@@ -233,22 +235,16 @@ public class JacocoService {
     public String buildReport(ExecuteRecords executeRecords) throws IOException {
 
         String baseFilePath= mangosteenWorkSpace +"/"+executeRecords.getProjectName()+"/"+ StringUtils.substringAfterLast(executeRecords.getCodeBranch(),"/")+"/";
-        boolean dumpFlag=true;
+
         if (readyClasses(executeRecords.getCodeBranch(),baseFilePath+"source")){
             String[] ips = executeRecords.getServerIp().split(",");
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
             String dumpFilePath=simpleDateFormat.format(executeRecords.getExecuteTime())+"/";
 
+            boolean dumpResult = visitDumpCommand( baseFilePath + dumpFilePath,ips);
 
-            for (String ip:ips){
-                boolean dumpResult = visitDumpCommand(StringUtils.substringBefore(ip,":"), StringUtils.substringAfter(ip,":"), baseFilePath + dumpFilePath);
-                if(!dumpResult){
-                    dumpFlag=false;
-                }
-            }
-
-            if(dumpFlag){
+            if(dumpResult){
                 Path sourceTarget = Paths.get(baseFilePath + "source/target");
                 Path reportTarget = Paths.get(baseFilePath + dumpFilePath);
                 FileUtils.copyDir(sourceTarget,reportTarget);
@@ -285,6 +281,11 @@ public class JacocoService {
             return true;
         }
         return false;
+    }
+
+
+    public String queryUserRole(String userName){
+        return userMapper.queryUserRole(userName);
     }
 
 }

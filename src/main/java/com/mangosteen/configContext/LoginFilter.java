@@ -39,7 +39,7 @@ public class LoginFilter implements Filter {
         } else {
 
             // session中包含user对象,则是登录状态
-            if(session!=null&&session.getAttribute("userName") != null){
+            if(session!=null&&session.getAttribute("user") != null){
                 filterChain.doFilter(request, response);
             }else{
                     //重定向到登录页(需要在static文件夹下建立此html文件)

@@ -27,4 +27,10 @@ public interface ProjectMapper {
 
     @Select("select id,projectName,projectGroup,codeBranch,projectConfig from tb_project where projectName=#{projectName}")
     Project queryProjectByName(String projectName);
+
+    @Update("update tb_project set projectName=#{projectName} ,codeBranch=#{codeBranch} ,projectConfig=#{projectConfig} where id =#{id}")
+    void updateProjectById(Project project);
+
+    @Delete("delete from tb_project where projectName=#{projectName}")
+    void deleteByProjectName(String projectName);
 }

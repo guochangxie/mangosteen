@@ -12,8 +12,8 @@
                     <div class="au-breadcrumb-content">
                         <div class="au-breadcrumb-left">
                         </div>
-                        <button class="au-btn au-btn-icon au-btn--green" th:onclick="'javascript:addProject()'">
-                            <i class="zmdi zmdi-plus"></i><a >添加项目</a></button>
+                        <button class="au-btn au-btn-icon au-btn--green" th:if="${session.user} =='admin'" th:onclick="'javascript:addProject()'">
+                            <i class="zmdi zmdi-plus"></i><a th:value="${session.user}">添加项目</a></button>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,10 @@
                 <td th:text="${project.projectName}" class="desc" ></td>
                 <td class="table-data-feature"><button class="btn btn-outline-success btn-sm" th:onclick="'javascript:toEexcuteProject(this)'">构建</button>
                  &nbsp;<button type="button" class="btn btn-outline-warning btn-sm" th:onclick="'javascript:tobuildHistory(this)'">历史记录</button>
-                 &nbsp;<button type="button" class="btn btn-outline-primary btn-sm">项目配置</button></td>
+                 &nbsp;<button type="button" class="btn btn-outline-primary btn-sm" th:if="${session.user} == 'admin'" th:onclick="'javascript:toConfigProject(this)'">项目配置</button>
+                    &nbsp;<button type="button" class="btn btn-outline-danger btn-sm" th:if="${session.user} == 'admin'" th:onclick="'javascript:delelteProject(this)'">删除</button>
+                </td>
+
             </tr>
             <tr class="spacer"></tr>
             </div>
