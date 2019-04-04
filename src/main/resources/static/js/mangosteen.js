@@ -6,7 +6,9 @@ function saveProject() {
     $("#hf-codeBranch").validate("开发分支");
     $("#tomcatTable input").each(function (){
         if($(this).val()==""){
-            alert("Tomcat信息不能为空！");
+            $.alert({
+                content: 'Tomcat信息不能为空!',
+            });
             $(this).focus();
             throw SyntaxError();
         }
@@ -48,13 +50,16 @@ function saveProject() {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             if(data=="SUCCESS"){
+
                 alert("配置项目成功!");
                 window.location.href="/mangosteen/project/showProject";
                 window.event.returnValue=false;
             }
         },
         error: function (err) {
+
             alert("配置项目错误!");
+
         }
     });
 
@@ -132,7 +137,9 @@ function addRow(obj) {
 function delRow(obj) {
     //移除
     if($(obj).parent().parent().siblings().length==0){
-        alert("不能删除最后一行!")
+        $.alert({
+            content: '不能删除最后一行!',
+        });
         return;
     }
     $(obj).parent().parent().remove();
@@ -234,7 +241,8 @@ function isLogin() {
         window.event.returnValue=false;
 
     }else {
-        alert("用户名或密码错误");
+
+        alert("用户名或密码错误!");
     }
 
 }
@@ -250,9 +258,14 @@ function resetCoverage(){
 
         success: function (data) {
             if("SUCCESS"==data){
-                alert("覆盖率重置成功");
+                $.alert({
+                    content: '覆盖率重置成功!',
+                });
 
-            }else { alert("覆盖率重置失败");
+            }else {
+                $.alert({
+                    content: '覆盖率重置失败!',
+                });
             }
 
         }
@@ -276,6 +289,32 @@ function selectIPByProjectName() {
             });
         }
     });
+}
+
+
+function logout() {
+    $.confirm({
+        title: '安全退出!',
+        content: '确认要退出?',
+        btnClass: 'btn-blue',
+        typeAnimated: true,
+        buttons: {
+            tryAgain: {
+                text: '确认',
+                btnClass: 'btn-red',
+                action: function(){
+                    $.StandardPost("/mangosteen/project/logout");
+                }
+            },
+            close:  {
+                text:'取消',
+                action:function () {
+
+                }
+            }
+        }
+    });
+
 }
 
 

@@ -73,6 +73,15 @@ public class MangosteenProjectController {
         return "login";
     }
 
+
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest) {
+        httpServletRequest.getSession().removeAttribute("user");
+        return "login";
+    }
+
+
     @RequestMapping("/isLogin")
     @ResponseBody
     public String login(HttpServletRequest httpServletRequest){
@@ -166,15 +175,18 @@ public class MangosteenProjectController {
         JSONObject requestData = JSON.parseObject(request.getParameter("buildReportForm"));
         ExecuteRecords executeRecords=new ExecuteRecords();
         executeRecords.setProjectName(requestData.getString("hf-projectName"));
+        Project project = projectService.queryProjectByName(executeRecords.getProjectName());
         String codeBranch=requestData.getString("hf-devBranch");
-        if (codeBranch.endsWith("/")){
+        if(StringUtils.isBlank(codeBranch)){
+            codeBranch=project.getCodeBranch();
+        }else if (codeBranch.endsWith("/")){
             codeBranch=StringUtils.substringBeforeLast(codeBranch,"/");
         }
         executeRecords.setCodeBranch(codeBranch);
         executeRecords.setServerIp(requestData.getString("hf-ip").replace("[","").replace("]","").replace("\"",""));
         executeRecords.setExecuteTime(new Date());
         if(StringUtils.isNotBlank(request.getParameter("Increment"))){
-            Project project = projectService.queryProjectByName(executeRecords.getProjectName());
+
             executeRecords.setDiffUrl(project.getCodeBranch());
         }
         String reportPath = null;
