@@ -1,13 +1,10 @@
 package com.mangosteen.service;
 
 
-import com.mangosteen.dao.UserMapper;
 import com.mangosteen.model.ExecuteRecords;
-
 import com.mangosteen.service.impl.GitRepositoryImpl;
 import com.mangosteen.service.impl.SvnRepositoryImpl;
 import com.mangosteen.tools.FileUtils;
-import com.mangosteen.tools.MD5Tools;
 import org.apache.commons.lang3.StringUtils;
 import com.mangosteen.jacoco.core.tools.ExecDumpClient;
 import com.mangosteen.jacoco.core.tools.ExecFileLoader;
@@ -46,8 +43,7 @@ public class JacocoService {
     @Autowired
     private GitRepositoryImpl gitRepositoryImpl;
 
-    @Autowired
-    private UserMapper userMapper;
+
 
     /**
      * 执行dump命令，获取代码覆盖率二进制文件
@@ -169,18 +165,6 @@ public class JacocoService {
         return null;
     }
 
-    public boolean isLogin(String userName,String passwd){
-        String passWord = userMapper.queryPasswdByUserName(userName);
-        String encryption = MD5Tools.encryption(passwd);
-        if(encryption.equals(passWord)){
-            return true;
-        }
-        return false;
-    }
 
-
-    public String queryUserRole(String userName){
-        return userMapper.queryUserRole(userName);
-    }
 
 }

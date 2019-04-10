@@ -7,6 +7,7 @@ import com.mangosteen.model.ExecuteRecords;
 import com.mangosteen.model.Project;
 import com.mangosteen.model.ProjectConfig;
 import com.mangosteen.service.JacocoService;
+import com.mangosteen.service.MangosteenUserService;
 import com.mangosteen.service.ProjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class MangosteenProjectController {
     private ProjectService projectService;
     @Autowired
     private JacocoService jacocoService;
+    @Autowired
+    private MangosteenUserService mangosteenUserService;
     @RequestMapping("/showProject")
     public String createProject(HttpServletRequest httpServletRequest, ModelMap modelMap) {
 
@@ -88,9 +91,9 @@ public class MangosteenProjectController {
 
         String userName=httpServletRequest.getParameter("userName");
         String passwd=httpServletRequest.getParameter("password");
-        boolean isLogin = jacocoService.isLogin(userName, passwd);
+        boolean isLogin = mangosteenUserService.isLogin(userName, passwd);
         if(isLogin){
-            httpServletRequest.getSession().setAttribute("user",jacocoService.queryUserRole(userName));
+            httpServletRequest.getSession().setAttribute("user",mangosteenUserService.queryUserRole(userName));
             return "SUCCESS";
         }
         return "FAIL";
