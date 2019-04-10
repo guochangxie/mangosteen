@@ -19,8 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SvnManager {
     private SVNClientManager ourClientManager;
     private SVNURL repositoryOptUrl;
-    private String username="test_conf";
-    private String password="09876POIUY[]";
+    private String username="XXXXX";
+    private String password="XXXXX";
     private Lock lock = new ReentrantLock();
 
     public void init(){
