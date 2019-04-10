@@ -1,5 +1,6 @@
 package com.mangosteen.service.impl;
 
+import com.mangosteen.service.CodeRepository;
 import com.mangosteen.tools.SvnManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,15 +19,17 @@ import java.util.List;
  * @date 2019/3/2010:47 AM
  */
 @Service("svnImpl")
-public class SvnRepositoryImpl {
+public class SvnRepositoryImpl implements CodeRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(SvnRepositoryImpl.class);
 
-    public boolean checkOut(String sourceFile, String devBranch) {
+    @Override
+    public boolean downLoad(File repository, String branch) {
+
         SvnManager svnManager=new SvnManager();
         svnManager.init();
         try {
-            svnManager.checkOutModel(sourceFile,devBranch);
+            svnManager.checkOutModel(repository,branch);
         } catch (Exception e) {
             logger.error("svn 检出失败，详情为:{}",e.getMessage());
             return false;
@@ -34,8 +37,8 @@ public class SvnRepositoryImpl {
         return true;
     }
 
-
-    public boolean update(File file) {
+    @Override
+    public boolean update(File file, String branch) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
         try {
@@ -47,22 +50,19 @@ public class SvnRepositoryImpl {
         return true;
     }
 
-    public boolean doDiff(String baseUrl, String diffUrl, String resultFilePath) {
+    @Override
+    public List<String> diff(String baseUrl, String diffUrl,String diffRestFile) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
         try {
-            svnManager.doDiff(baseUrl,diffUrl,resultFilePath);
+            svnManager.doDiff(baseUrl,diffUrl,diffRestFile);
         } catch (Exception e) {
             logger.error("svn diff fail：{}",e.getMessage());
-            return false;
-        }
-        return true;
-    }
 
-    public List<String> paseDiffFile(String filePath) {
+        }
         List<String> changfiles=new ArrayList<>();
         try {
-            FileReader fileReader = new FileReader(new File(filePath));
+            FileReader fileReader = new FileReader(new File(diffRestFile));
             BufferedReader bufferedReader=new BufferedReader(fileReader);
             String  line =null;
             while((line=bufferedReader.readLine()) != null){
@@ -79,4 +79,5 @@ public class SvnRepositoryImpl {
 
         return changfiles;
     }
+
 }

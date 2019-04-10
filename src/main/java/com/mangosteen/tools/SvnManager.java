@@ -19,8 +19,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SvnManager {
     private SVNClientManager ourClientManager;
     private SVNURL repositoryOptUrl;
-    private String username="XXXXX";
-    private String password="XXXXX";
+    private String username="test";
+    private String password="xxxxxx";
+
     private Lock lock = new ReentrantLock();
 
     public void init(){
@@ -113,20 +114,14 @@ public class SvnManager {
         }
     }
 
-    public long checkOutModel(String dirPath,String onlineUrl) throws Exception{
+    public long checkOutModel(File dirPath,String onlineUrl) throws Exception{
         lock.lock();
         try {
-            File outDir=new File(dirPath);
-            if(!outDir.exists()){
-                outDir.mkdirs();//创建目录
-            }else {
-                System.out.println("本地目录创建失败");
-            }
             SVNUpdateClient updateClient=ourClientManager.getUpdateClient();
             updateClient.setIgnoreExternals(false);
             SVNURL destUrl=SVNURL.parseURIEncoded(onlineUrl);
             // 执行check out 操作，返回工作副本的版本号。
-            return updateClient.doCheckout(destUrl, outDir, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY,false);//INFINITY是递归的导出，false条目存在版本问题时终止checkOut操作
+            return updateClient.doCheckout(destUrl, dirPath, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY,false);//INFINITY是递归的导出，false条目存在版本问题时终止checkOut操作
         } finally{
             lock.unlock();
         }

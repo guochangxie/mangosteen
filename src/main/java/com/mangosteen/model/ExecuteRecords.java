@@ -23,6 +23,11 @@ public class ExecuteRecords {
 
     private String diffUrl;
 
+    //是否为git仓库
+    private boolean isGit;
+    //是否为增量覆盖率
+    private boolean isIncrement;
+
     public int getId() {
         return id;
     }
@@ -77,6 +82,22 @@ public class ExecuteRecords {
 
     public void setDiffUrl(String diffUrl) {
         this.diffUrl = diffUrl;
+    }
+
+    public boolean isGit() {
+        return isGit;
+    }
+
+    public void setGit(boolean git) {
+        isGit = git;
+    }
+
+    public boolean isIncrement() {
+        return isIncrement;
+    }
+
+    public void setIncrement(boolean increment) {
+        isIncrement = increment;
     }
 
     @Override

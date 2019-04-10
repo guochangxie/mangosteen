@@ -3,12 +3,12 @@ package com.mangosteen.service;
 
 import com.mangosteen.dao.UserMapper;
 import com.mangosteen.model.ExecuteRecords;
-import com.mangosteen.model.ProjectConfig;
+
+import com.mangosteen.service.impl.GitRepositoryImpl;
+import com.mangosteen.service.impl.SvnRepositoryImpl;
 import com.mangosteen.tools.FileUtils;
 import com.mangosteen.tools.MD5Tools;
-import com.mangosteen.tools.SvnManager;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.shared.invoker.*;
 import com.mangosteen.jacoco.core.tools.ExecDumpClient;
 import com.mangosteen.jacoco.core.tools.ExecFileLoader;
 import org.slf4j.Logger;
@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,11 +34,17 @@ public class JacocoService {
 
     private static final Logger logger = LoggerFactory.getLogger(JacocoService.class);
 
+    @Autowired
+    private CodeCompilingEngine codeCompilingEngine;
+
     @Value("${mangosteen.workspace}")
     private String mangosteenWorkSpace;
 
     @Autowired
-    private CodeRepository codeRepository;
+    private SvnRepositoryImpl svnRepositoryImpl;
+
+    @Autowired
+    private GitRepositoryImpl gitRepositoryImpl;
 
     @Autowired
     private UserMapper userMapper;
@@ -95,123 +100,6 @@ public class JacocoService {
     }
 
     /**
-     * svn 下载代码，并编译为class文件
-     * @param devBranch
-     * @return
-     */
-    public boolean readyClasses(String devBranch,String sourceFile){
-
-        logger.info("svn init");
-        boolean flag=true;
-        File file=new File(sourceFile);
-        //文件不存在则从svn下载，存在则从svn update
-        if (!file.exists()){
-            try {
-                codeRepository.checkOut(sourceFile,devBranch);
-            } catch (Exception e) {
-                logger.error("svn 检出失败，详情为:{}",e.getMessage());
-            }
-
-        }else {
-            codeRepository.update(file);
-        }
-
-        try {
-            InvocationRequest request = new DefaultInvocationRequest();
-            request.setPomFile( new File( file,"pom.xml" ) );
-            request.setGoals(Arrays.asList("clean","package -Dmaven.test.skip=true") );
-            Invoker invoker = new DefaultInvoker();
-            invoker.setMavenHome(new File(System.getenv("M2_HOME")));
-            InvocationResult result = invoker.execute(request);
-
-            if (result.getExitCode()!=0){
-                if ( result.getExecutionException() != null )
-                {
-                   logger.error(result.getExecutionException().getMessage());
-
-                }
-                else
-                {
-                    logger.error("maven execute errorCode is {}",result.getExitCode());
-
-                }
-
-            }
-
-        } catch (MavenInvocationException e) {
-            logger.error("maven package fail：{}",e.getMessage());
-            flag=false;
-        }
-
-
-        return flag;
-    }
-
-    public boolean doDidd(String baseUrl,String diffUrl,String resultFilePath){
-        SvnManager svnManager=new SvnManager();
-        svnManager.init();
-        try {
-            codeRepository.doDiff(baseUrl,diffUrl,resultFilePath);
-        } catch (Exception e) {
-            logger.error("svn diff fail：{}",e.getMessage());
-            return false;
-        }
-       return true;
-    }
-
-
-    /**
-     * 解析svndiff 后的差异文件，获取变更的文件类,将变更的文件切割到方法粒度
-     * @param filePath
-     * @return
-     */
-    // TODO: 2019/2/26
-    /*public List<ChangeCode> paseDiffFile(String filePath){
-
-        List<ChangeCode> changeCodes=new ArrayList<>();
-        try {
-            FileReader fileReader = new FileReader(new File(filePath));
-            BufferedReader bufferedReader=new BufferedReader(fileReader);
-            String  line =null;
-            ChangeCode changeCode=null;
-            while((line=bufferedReader.readLine()) != null){
-                if (line.startsWith("Index:")){
-                  changeCode=new ChangeCode();
-                  changeCode.setFileName(StringUtils.substringAfterLast(line,"Index:").trim());
-                  changeCodes.add(changeCode);
-                }else if (StringUtils.contains(line,"@@")){
-                    changeCode.addChangeLine(StringUtils.substringBetween(line,"+",","));
-                }else {
-                    String pattern = "(public|private|protected)+\\s(static)?\\s?(\\w+)\\s(\\w+)\\((\\w+.*\\w*)?\\)";
-
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher matcher = r.matcher(pattern);
-                    if(matcher.find()){
-                        System.out.printf(line);
-                        System.out.println("Found value: " + matcher.group(0) );
-                        System.out.println("Found value: " + matcher.group(1) );
-                        System.out.println("Found value: " + matcher.group(2) );
-                        System.out.println("Found value: " + matcher.group(3) );
-                    }
-
-                }
-
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return changeCodes;
-    }
-*/
-    public List<String> paseDiffFile(String filePath){
-
-        return codeRepository.paseDiffFile(filePath);
-    }
-    /**
      * 构建jacoco测试报告文件
      * 文件结构为
      * mongosteenworkspace
@@ -234,16 +122,25 @@ public class JacocoService {
      */
     public String buildReport(ExecuteRecords executeRecords) throws IOException {
 
-        String baseFilePath= mangosteenWorkSpace +"/"+executeRecords.getProjectName()+"/"+ StringUtils.substringAfterLast(executeRecords.getCodeBranch(),"/")+"/";
+        String baseFilePath=null;
+        CodeRepository codeRepository=null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        String dumpFilePath=simpleDateFormat.format(executeRecords.getExecuteTime())+"/";
+        String reportPath=null;
+        if(executeRecords.isGit()){
+            baseFilePath=mangosteenWorkSpace +"/"+executeRecords.getProjectName()+"/";
+            executeRecords.setDiffUrl(baseFilePath+"source");
+            reportPath="/"+executeRecords.getProjectName()+"/"+dumpFilePath+"coveragereport/index.html";
+            codeRepository=gitRepositoryImpl;
+        }else{
+            baseFilePath= mangosteenWorkSpace +"/"+executeRecords.getProjectName()+"/"+ StringUtils.substringAfterLast(executeRecords.getCodeBranch(),"/")+"/";
+            reportPath="/"+executeRecords.getProjectName()+"/"+ StringUtils.substringAfterLast(executeRecords.getCodeBranch(),"/")+"/"+dumpFilePath+"coveragereport/index.html";
+            codeRepository=svnRepositoryImpl;
+        }
 
-        if (readyClasses(executeRecords.getCodeBranch(),baseFilePath+"source")){
+        if (codeCompilingEngine.readyClasses(codeRepository,executeRecords.getCodeBranch(),baseFilePath+"source")){
             String[] ips = executeRecords.getServerIp().split(",");
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-            String dumpFilePath=simpleDateFormat.format(executeRecords.getExecuteTime())+"/";
-
             boolean dumpResult = visitDumpCommand( baseFilePath + dumpFilePath,ips);
-
             if(dumpResult){
                 Path sourceTarget = Paths.get(baseFilePath + "source/target");
                 Path reportTarget = Paths.get(baseFilePath + dumpFilePath);
@@ -255,17 +152,15 @@ public class JacocoService {
                 reportGenerator.setClassesDirectory(new File(baseFile,dumpFilePath+"target/classes"));
                 reportGenerator.setSourceDirectory(new File(baseFile,"source/src/main/java"));
                 reportGenerator.setReportDirectory(new File(baseFile,dumpFilePath+"coveragereport"));
-                if (StringUtils.isNotBlank(executeRecords.getDiffUrl())){
+                if (executeRecords.isIncrement()){
                     String diffResut=baseFilePath+dumpFilePath+"difflog.txt";
-                    boolean doDidd = doDidd(executeRecords.getCodeBranch(), executeRecords.getDiffUrl(), diffResut);
-                    if (doDidd){
-                        List<String> paseDiffFile = paseDiffFile(diffResut);
-                        reportGenerator.setChangefiles(paseDiffFile);
-                    }
+                    List<String> diffClassFile = codeCompilingEngine.getDiffClassFile(codeRepository, executeRecords.getCodeBranch(), executeRecords.getDiffUrl(), diffResut);
+                    reportGenerator.setChangefiles(diffClassFile);
+
                 }
 
                 reportGenerator.create();
-                String reportPath="/"+executeRecords.getProjectName()+"/"+ StringUtils.substringAfterLast(executeRecords.getCodeBranch(),"/")+"/"+dumpFilePath+"coveragereport/index.html";
+
                 return reportPath;
             }
 

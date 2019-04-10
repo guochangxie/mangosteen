@@ -1,46 +1,39 @@
 package com.mangosteen.service;
 
+
 import java.io.File;
 import java.util.List;
 
 /**
  * @author guochang.xie
  * @Description: TODO
- * @date 2019/3/2010:32 AM
+ * @date 2019/4/1012:15 PM
  */
-
 public interface CodeRepository {
 
     /**
-     * 代码检出
-     * @param sourceFile 检出到本地文件路径
-     * @param devBranch 分支地址
-     */
-     void checkOut(String sourceFile,String devBranch);
-
-    /**
-     * 代码文件更新
-     * @param file
-     */
-     void update(File file);
-
-    /**
-     * 分支比对
-     * @param baseUrl 主干或者master版本地址
-     * @param diffUrl 分支地址
-     * @param resultFilePath 比对后结果文件路径
+     * 从代码仓库下载代码
+     * @param repository 本地文件路径
+     * @param branch     要下载的分支地址
      * @return
      */
-    boolean doDiff(String baseUrl, String diffUrl, String resultFilePath);
-
+     boolean downLoad(File repository, String branch);
 
     /**
-     * 解析diff后的日志文件
-     * @param filePath diff日志路径
-     * @return 发生变更的class列表
+     * 从代码仓库更新代码
+     * @param file 本地代码位置
+     * @param branch 要更新的分支地址
+     * @return
      */
-    List<String> paseDiffFile(String filePath);
+     boolean update(File file, String branch);
 
-
+    /**
+     *
+     * @param baseUrl
+     * @param diffUrl
+     * @param diffRestFile 对比结果文件
+     * @return 变更的方法列表
+     */
+     List<String> diff(String baseUrl, String diffUrl,String diffRestFile);
 
 }

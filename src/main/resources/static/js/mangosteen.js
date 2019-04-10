@@ -27,13 +27,12 @@ function saveProject() {
 
     var projectName= $("#hf-projectName").val();
     var codeBranch= $("#hf-codeBranch").val();
-    var projectId='';
-    projectId=$("#hf-projectId").val();
+    var projectId=$("#hf-projectId").val();
 
-    var url="/mangosteen/project/saveProject/";
+    var  url="/mangosteen/project/updateProject/";
+    if (typeof(projectId) == "undefined"){
+        url="/mangosteen/project/saveProject/";
 
-    if (projectId!=''){
-        url="/mangosteen/project/updateProject/";
     }
 
     $.ajax({

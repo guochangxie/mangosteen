@@ -182,12 +182,15 @@ public class MangosteenProjectController {
         }else if (codeBranch.endsWith("/")){
             codeBranch=StringUtils.substringBeforeLast(codeBranch,"/");
         }
+        if(project.getCodeBranch().endsWith(".git")){
+            executeRecords.setGit(true);
+        }
         executeRecords.setCodeBranch(codeBranch);
         executeRecords.setServerIp(requestData.getString("hf-ip").replace("[","").replace("]","").replace("\"",""));
         executeRecords.setExecuteTime(new Date());
         if(StringUtils.isNotBlank(request.getParameter("Increment"))){
-
             executeRecords.setDiffUrl(project.getCodeBranch());
+            executeRecords.setIncrement(true);
         }
         String reportPath = null;
         try {
