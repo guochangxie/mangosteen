@@ -1,6 +1,5 @@
 package com.mangosteen.service.impl;
 
-import com.mangosteen.service.CodeRepository;
 import com.mangosteen.tools.SvnManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,34 +18,35 @@ import java.util.List;
  * @date 2019/3/2010:47 AM
  */
 @Service("svnImpl")
-public class SvnRepositoryImpl implements CodeRepository {
+public class SvnRepositoryImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(SvnRepositoryImpl.class);
 
-    @Override
-    public void checkOut(String sourceFile, String devBranch) {
+    public boolean checkOut(String sourceFile, String devBranch) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
         try {
             svnManager.checkOutModel(sourceFile,devBranch);
         } catch (Exception e) {
             logger.error("svn 检出失败，详情为:{}",e.getMessage());
+            return false;
         }
-
+        return true;
     }
 
-    @Override
-    public void update(File file) {
+
+    public boolean update(File file) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
         try {
             svnManager.updateModel(file);
         } catch (Exception e) {
             logger.error("svn 更新失败，详情为:{}",e.getMessage());
+            return false;
         }
+        return true;
     }
 
-    @Override
     public boolean doDiff(String baseUrl, String diffUrl, String resultFilePath) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
@@ -59,7 +59,6 @@ public class SvnRepositoryImpl implements CodeRepository {
         return true;
     }
 
-    @Override
     public List<String> paseDiffFile(String filePath) {
         List<String> changfiles=new ArrayList<>();
         try {
