@@ -65,7 +65,15 @@ CREATE TABLE `tb_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+-- ----------------------------
+-- Records of tb_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `tb_role` VALUES (1, 'admin', 'admin');
+INSERT INTO `tb_role` VALUES (2, 'test', 'test');
+COMMIT;
 
+SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `tb_user`
 --
@@ -80,7 +88,15 @@ CREATE TABLE `tb_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+-- ----------------------------
+-- Records of tb_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `tb_user` VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3');
+INSERT INTO `tb_user` VALUES ('2', 'test', '098f6bcd4621d373cade4e832627b4f6');
+COMMIT;
 
+SET FOREIGN_KEY_CHECKS = 1;
 --
 -- Table structure for table `tb_userrole`
 --
@@ -94,6 +110,14 @@ CREATE TABLE `tb_userrole` (
   `roleId` int(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tb_userrole
+-- ----------------------------
+BEGIN;
+INSERT INTO `tb_userrole` VALUES (1, 1, 1);
+INSERT INTO `tb_userrole` VALUES (2, 2, 2);
+COMMIT;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
