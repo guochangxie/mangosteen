@@ -16,9 +16,9 @@ import java.util.List;
  * @date 2019/4/1012:27 PM
  */
 @Service
-public class CodeCompilingEngine {
+public class CodeEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(CodeCompilingEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(CodeEngine.class);
 
 
     public boolean readyClasses(CodeRepository codeRepository,String devBranch, String sourceFile){

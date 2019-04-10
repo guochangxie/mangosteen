@@ -35,7 +35,7 @@ public class JacocoService {
     private static final Logger logger = LoggerFactory.getLogger(JacocoService.class);
 
     @Autowired
-    private CodeCompilingEngine codeCompilingEngine;
+    private CodeEngine codeCompilingEngine;
 
     @Value("${mangosteen.workspace}")
     private String mangosteenWorkSpace;
