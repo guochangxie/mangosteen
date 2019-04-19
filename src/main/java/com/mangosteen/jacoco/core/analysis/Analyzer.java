@@ -231,12 +231,14 @@ public class Analyzer {
 		} else {
 			final InputStream in = new FileInputStream(file);
 			try {
-				if(changeClassFiles!=null){
-					if (changeClassFiles.contains(file.getName())){
+				if(file.getName().endsWith(".class")){
+					if(changeClassFiles!=null){
+						if (changeClassFiles.contains(file.getName())){
+							count += analyzeAll(in, file.getPath());
+						}
+					}else {
 						count += analyzeAll(in, file.getPath());
 					}
-				}else {
-					count += analyzeAll(in, file.getPath());
 				}
 
 			} finally {
