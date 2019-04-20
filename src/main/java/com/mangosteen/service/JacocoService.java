@@ -67,7 +67,8 @@ public class JacocoService {
                 execFileLoader.save(new File(saveFile+"jacoco-client.exec"), true);
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("visitDump error,errorMessage:{} ",e.getMessage());
+            e.printStackTrace();
             return false;
         }
         return true;

@@ -37,6 +37,7 @@ public class MangosteenProjectController {
     private JacocoService jacocoService;
     @Autowired
     private MangosteenUserService mangosteenUserService;
+
     @RequestMapping("/showProject")
     public String createProject(HttpServletRequest httpServletRequest, ModelMap modelMap) {
 
@@ -130,11 +131,45 @@ public class MangosteenProjectController {
     public String tobuildHistory(HttpServletRequest httpServletRequest, Model modelMap) {
         String projectName = httpServletRequest.getParameter("projectName");
         modelMap.addAttribute("templatename", "buildHistory");
-        List<ExecuteRecords> executeRecords=projectService.queryExecuteRecordByProjectName(projectName);
+        int pageSize=15;
+        int currentPage=StringUtils.isBlank(httpServletRequest.getParameter("currentPage"))?1: Integer.parseInt(httpServletRequest.getParameter("currentPage"));
+        int pageCount=projectService.countExecuteRecordByProjectName(projectName);
+        int pageTime=pageCount%pageSize==0?pageCount/pageSize:pageCount/pageSize+1;
+        List<ExecuteRecords> executeRecords=projectService.queryExecuteRecordByProjectName(projectName,(currentPage-1)*pageSize,pageSize);
         modelMap.addAttribute("executeRecords",executeRecords);
-
+        modelMap.addAttribute("pageCount",pageCount);
+        modelMap.addAttribute("pageTime",pageTime);
+        modelMap.addAttribute("projectName",projectName);
         return "index";
     }
+
+    /**
+     * 跳转到构建历史记录
+     *
+     * @param httpServletRequest
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping("/queryHistory")
+    public String queryHistory(HttpServletRequest httpServletRequest, Model modelMap) {
+        String projectName = httpServletRequest.getParameter("projectName");
+        String beginTime=httpServletRequest.getParameter("beginTime");
+        String endTime=httpServletRequest.getParameter("endTime");
+        String branch=httpServletRequest.getParameter("branch").trim();
+        int pageSize=15;
+        int currentPage=StringUtils.isBlank(httpServletRequest.getParameter("currentPage"))?1: Integer.parseInt(httpServletRequest.getParameter("currentPage"));
+        int pageCount=projectService.countExecuteRecordByProjectNameAndBranch(projectName,branch);
+        int pageTime=pageCount%pageSize==0?pageCount/pageSize:pageCount/pageSize+1;
+        List<ExecuteRecords> executeRecords=projectService.queryExecuteRecordByProjectName(projectName,branch,beginTime,endTime,(currentPage-1)*pageSize,pageSize);
+        modelMap.addAttribute("executeRecords",executeRecords);
+        modelMap.addAttribute("pageCount",pageCount);
+        modelMap.addAttribute("pageTime",pageTime);
+        modelMap.addAttribute("templatename", "buildHistory");
+        modelMap.addAttribute("projectName",projectName);
+        modelMap.addAttribute("branch",branch);
+        return "index";
+    }
+
 
 
     @RequestMapping("/saveProject")

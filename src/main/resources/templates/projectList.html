@@ -5,27 +5,25 @@
 </head>
 <body>
 <div th:fragment="projectList" class="top-campaign">
-    <div class="section__content section__content--p30">
-        <div class="container-fluid">
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="au-breadcrumb-content">
                         <div class="au-breadcrumb-left">
+                            <h3 style="color:#7A746F">
+                                <i class="fa fa-align-justify"></i>项目列表</h3>
                         </div>
                         <button class="au-btn au-btn-icon au-btn--green" th:if="${session.user} =='admin'" th:onclick="'javascript:addProject()'">
                             <i class="zmdi zmdi-plus"></i><a th:value="${session.user}">添加项目</a></button>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <h3 class="title-3 m-b-30">项目列表</h3>
 
+    <br>
     <div class="table-responsive table-responsive-data2">
         <table class="table table-data2">
             <tbody>
-
             <div th:each="project:${projectList}">
             <tr class="tr-shadow">
                 <td th:text="${project.projectName}" class="desc" ></td>

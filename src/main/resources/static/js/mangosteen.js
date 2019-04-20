@@ -316,4 +316,10 @@ function logout() {
 
 }
 
+function turning(currentPage) {
+    var projectName=$("#projectName").val();
+    var branch=$("branch").val();
+    $.StandardPost("/mangosteen/project/queryHistory",{'projectName':projectName,'branch':branch,'currentPage':currentPage})
+
+}
 
