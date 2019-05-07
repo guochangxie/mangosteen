@@ -9,10 +9,11 @@ import com.mangosteen.model.ProjectConfig;
 import com.mangosteen.service.JacocoService;
 import com.mangosteen.service.MangosteenUserService;
 import com.mangosteen.service.ProjectService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -28,15 +30,19 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/project")
+@Slf4j
 public class MangosteenProjectController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MangosteenProjectController.class);
     @Autowired
     private ProjectService projectService;
     @Autowired
     private JacocoService jacocoService;
     @Autowired
     private MangosteenUserService mangosteenUserService;
+    @Value("${mangosteen.workspace}")
+    private String mangosteenWorkSpace;
+    private int pageSize=15;
+
 
     @RequestMapping("/showProject")
     public String createProject(HttpServletRequest httpServletRequest, ModelMap modelMap) {
@@ -131,7 +137,6 @@ public class MangosteenProjectController {
     public String tobuildHistory(HttpServletRequest httpServletRequest, Model modelMap) {
         String projectName = httpServletRequest.getParameter("projectName");
         modelMap.addAttribute("templatename", "buildHistory");
-        int pageSize=15;
         int currentPage=StringUtils.isBlank(httpServletRequest.getParameter("currentPage"))?1: Integer.parseInt(httpServletRequest.getParameter("currentPage"));
         int pageCount=projectService.countExecuteRecordByProjectName(projectName);
         int pageTime=pageCount%pageSize==0?pageCount/pageSize:pageCount/pageSize+1;
@@ -143,6 +148,18 @@ public class MangosteenProjectController {
         return "index";
     }
 
+    @RequestMapping("/histroylog")
+    public  @ResponseBody List<String> historyLog(HttpServletRequest httpServletRequest) {
+        List<String> list=null;
+        String logPath = httpServletRequest.getParameter("logPath");
+        String logFile = mangosteenWorkSpace+"/"+StringUtils.substringBefore(logPath, "coveragereport/")+"build.log" ;
+        try {
+            list= FileUtils.readLines(new File(logFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     /**
      * 跳转到构建历史记录
      *
@@ -156,7 +173,6 @@ public class MangosteenProjectController {
         String beginTime=httpServletRequest.getParameter("beginTime");
         String endTime=httpServletRequest.getParameter("endTime");
         String branch=httpServletRequest.getParameter("branch").trim();
-        int pageSize=15;
         int currentPage=StringUtils.isBlank(httpServletRequest.getParameter("currentPage"))?1: Integer.parseInt(httpServletRequest.getParameter("currentPage"));
         int pageCount=projectService.countExecuteRecordByProjectNameAndBranch(projectName,branch);
         int pageTime=pageCount%pageSize==0?pageCount/pageSize:pageCount/pageSize+1;
@@ -234,7 +250,7 @@ public class MangosteenProjectController {
         try {
             reportPath = jacocoService.buildReport(executeRecords);
         } catch (IOException e) {
-            logger.error("覆盖率报告生成失败:{}",e.getMessage());
+            log.error("覆盖率报告生成失败:{}",e.getMessage());
             reportPath ="/error.html";
         }
         if (StringUtils.isNotBlank(reportPath)){

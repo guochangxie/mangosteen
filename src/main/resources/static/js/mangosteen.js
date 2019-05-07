@@ -323,3 +323,32 @@ function turning(currentPage) {
 
 }
 
+function histroylog(obj) {
+
+    var logPath=$(obj).parent().parent().find("input[name=reportPath]").val();
+    $("#histroylog-container").dialog({
+        modal:true,
+        width:"50%",
+        height: 450,
+        modal: true,
+        draggable:true,  //拖拽
+        resizable:true,  //缩放
+        open:function(){
+            $.ajax({
+                type: "POST",
+                data:{logPath:logPath},
+                async:false,
+                url: "/mangosteen/project/histroylog",
+
+                success: function (data) {
+                    $.each(data,function (i,item) {
+                        $("#histroylog-container div").append(item);
+                        $("#histroylog-container div").append("<br>");
+
+                    })
+                }
+            });
+        }
+    });
+}
+

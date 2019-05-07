@@ -1,12 +1,12 @@
 package com.mangosteen.service;
 
 import com.mangosteen.service.impl.GitRepositoryImpl;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.shared.invoker.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,22 +15,24 @@ import java.util.List;
  * @Description: TODO
  * @date 2019/4/1012:27 PM
  */
+@Slf4j
 @Service
+@Setter
 public class CodeEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(CodeEngine.class);
-
+     private LogOption logOption;
 
     public boolean readyClasses(CodeRepository codeRepository,String devBranch, String sourceFile){
 
-        logger.info("begin readyClasses");
+        logOption.writeLog("begin readyClasses");
         File file=new File(sourceFile);
         if (!file.exists()){
             try {
                 file.mkdirs();
                 codeRepository.downLoad(file,devBranch);
             } catch (Exception e) {
-                logger.error("code DownLoad失败，详情为:{}",e.getMessage());
+                log.error("code DownLoad失败，详情为:{}",e.getMessage());
+                logOption.writeLog("code DownLoad失败，详情为:"+e.getMessage());
             }
 
         }else {
@@ -58,26 +60,30 @@ public class CodeEngine {
             request.setGoals(Arrays.asList("clean","compile -Dmaven.test.skip=true") );
             Invoker invoker = new DefaultInvoker();
             invoker.setMavenHome(new File(System.getenv("M2_HOME")));
+            final CollectingLogOutputStream logOutput = new CollectingLogOutputStream(true);
+            invoker.setOutputHandler(new PrintStreamHandler(new PrintStream(logOutput), true));
             InvocationResult result = invoker.execute(request);
-
             if (result.getExitCode()!=0){
                 if ( result.getExecutionException() != null )
                 {
-                    logger.error(result.getExecutionException().getMessage());
-
+                    log.error(result.getExecutionException().getMessage());
+                    logOption.writeLog("code compileClass，详情为:"+result.getExecutionException().getMessage());
                 }
                 else
                 {
-                    logger.error("maven execute errorCode is {}",result.getExitCode());
-
+                    log.error("maven execute errorCode is {}",result.getExitCode());
                 }
 
             }
+            logOption.writeLog(logOutput.getLine());
 
         } catch (MavenInvocationException e) {
-            logger.error("maven package fail：{}",e.getMessage());
+            log.error("maven package fail：{}",e.getMessage());
+            logOption.writeLog("maven package fail：:"+e.getMessage());
+
             return false;
         }
+
         return true;
     }
 

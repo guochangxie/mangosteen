@@ -1,6 +1,10 @@
 package com.mangosteen.model;
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class ProjectConfig {
 
     private int id ;
@@ -9,45 +13,6 @@ public class ProjectConfig {
     private int serverPort;
     private String serverContainer;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getServerIp() {
-        return serverIp;
-    }
-
-    public void setServerIp(String serverIp) {
-        this.serverIp = serverIp;
-    }
-
-    public int getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
-    }
-
-    public String getServerContainer() {
-        return serverContainer;
-    }
-
-    public void setServerContainer(String serverContainer) {
-        this.serverContainer = serverContainer;
-    }
 
     @Override
     public String toString() {

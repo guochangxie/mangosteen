@@ -5,11 +5,11 @@ import com.mangosteen.model.ExecuteRecords;
 import com.mangosteen.service.impl.GitRepositoryImpl;
 import com.mangosteen.service.impl.SvnRepositoryImpl;
 import com.mangosteen.tools.FileUtils;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import com.mangosteen.jacoco.core.tools.ExecDumpClient;
 import com.mangosteen.jacoco.core.tools.ExecFileLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,8 @@ import java.util.List;
  * @date 2018/12/2811:34 AM
  */
 @Service
+@Slf4j
 public class JacocoService {
-
-    private static final Logger logger = LoggerFactory.getLogger(JacocoService.class);
 
     @Autowired
     private CodeEngine codeCompilingEngine;
@@ -44,6 +43,7 @@ public class JacocoService {
     private GitRepositoryImpl gitRepositoryImpl;
 
 
+    private LogOption logOption;
 
     /**
      * 执行dump命令，获取代码覆盖率二进制文件
@@ -52,8 +52,7 @@ public class JacocoService {
      */
 
     public boolean visitDumpCommand(String saveFile,String ...ips){
-
-        logger.info("visitDump....");
+        logOption.writeLog("begin visitDumpCommand");
         File file=new File(saveFile);
         if (!file.exists()){
             file.mkdirs();
@@ -67,10 +66,11 @@ public class JacocoService {
                 execFileLoader.save(new File(saveFile+"jacoco-client.exec"), true);
             }
         } catch (IOException e) {
-            logger.error("visitDump error,errorMessage:{} ",e.getMessage());
-            e.printStackTrace();
+            log.error("visitDump error,errorMessage:{} ",e.getMessage());
+            logOption.writeLog("visitDump error,errorMessage:"+e.getMessage());
             return false;
         }
+        logOption.writeLog("visitDumpCommand success");
         return true;
 
     }
@@ -90,7 +90,7 @@ public class JacocoService {
         try {
             client.dump(address, Integer.valueOf(port));
         } catch (IOException e) {
-            logger.error("覆盖率重置失败，失败详情{}",e.getMessage());
+            log.error("覆盖率重置失败，失败详情{}",e.getMessage());
             return false;
         }
         return true;
@@ -135,9 +135,12 @@ public class JacocoService {
             codeRepository=svnRepositoryImpl;
         }
 
+        logOption=new LogOption(baseFilePath + dumpFilePath);
+        codeCompilingEngine.setLogOption(logOption);
         if (codeCompilingEngine.readyClasses(codeRepository,executeRecords.getCodeBranch(),baseFilePath+"source")){
             String[] ips = executeRecords.getServerIp().split(",");
             boolean dumpResult = visitDumpCommand( baseFilePath + dumpFilePath,ips);
+
             if(dumpResult){
                 Path sourceTarget = Paths.get(baseFilePath + "source/target");
                 Path reportTarget = Paths.get(baseFilePath + dumpFilePath);
@@ -157,7 +160,7 @@ public class JacocoService {
                 }
 
                 reportGenerator.create();
-
+                logOption.writeLog("buildReport success!");
                 return reportPath;
             }
 

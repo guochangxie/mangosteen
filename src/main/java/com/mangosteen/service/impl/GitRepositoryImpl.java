@@ -1,6 +1,7 @@
 package com.mangosteen.service.impl;
 
 import com.mangosteen.service.CodeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
@@ -14,8 +15,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -29,15 +28,12 @@ import java.util.List;
  * @date 2019/4/85:01 PM
  */
 @Service
+@Slf4j
 public class GitRepositoryImpl implements CodeRepository {
-
-
-    private static final Logger logger = LoggerFactory.getLogger(GitRepositoryImpl.class);
 
     private  String userName="guochang.xie";
 
     private  String passwd="xxxxxxxxx";
-
 
     @Override
     public boolean downLoad(File repository, String branch) {
@@ -48,7 +44,7 @@ public class GitRepositoryImpl implements CodeRepository {
             cloneCommand.call();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("git clone fail,errorMessage:{}",e.getMessage());
+            log.error("git clone fail,errorMessage:{}",e.getMessage());
             return false;
         }
         return true;
@@ -76,7 +72,7 @@ public class GitRepositoryImpl implements CodeRepository {
             pullCommand.call();
         } catch (Exception e) {
 
-            logger.error("git checkoutAndPull fail,errorMessage:{}",e.getMessage());
+            log.error("git checkoutAndPull fail,errorMessage:{}",e.getMessage());
             return false;
         }
 

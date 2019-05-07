@@ -1,7 +1,5 @@
 package com.mangosteen.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -13,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,7 +36,9 @@ public class LogHandle {
     public void onOpen(Session session) {
         try {
             // 执行tail -f命令
-            process = Runtime.getRuntime().exec("tail -f /opt/mangosteenWorkSpace/logs/spring.log");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String format = simpleDateFormat.format(new Date());
+            process = Runtime.getRuntime().exec("tail -f /opt/mangosteenWorkSpace/logs/mangosteen."+format+".log");
             inputStream = process.getInputStream();
             BufferedReader reader=new BufferedReader(new InputStreamReader(inputStream));
             ExecutorService executorService = Executors.newFixedThreadPool(2);

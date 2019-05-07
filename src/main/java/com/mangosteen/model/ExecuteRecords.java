@@ -1,5 +1,8 @@
 package com.mangosteen.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /**
@@ -7,6 +10,8 @@ import java.util.Date;
  * @Description: TODO
  * @date 2018/12/209:43 AM
  */
+@Getter
+@Setter
 public class ExecuteRecords {
 
     private int id ;
@@ -28,77 +33,6 @@ public class ExecuteRecords {
     //是否为增量覆盖率
     private boolean isIncrement;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getCodeBranch() {
-        return codeBranch;
-    }
-
-    public void setCodeBranch(String codeBranch) {
-        this.codeBranch = codeBranch;
-    }
-
-    public Date getExecuteTime() {
-        return executeTime;
-    }
-
-    public void setExecuteTime(Date executeTime) {
-        this.executeTime = executeTime;
-    }
-
-    public String getServerIp() {
-        return serverIp;
-    }
-
-    public void setServerIp(String serverIp) {
-        this.serverIp = serverIp;
-    }
-
-    public String getReportPath() {
-        return reportPath;
-    }
-
-    public void setReportPath(String reportPath) {
-        this.reportPath = reportPath;
-    }
-
-    public String getDiffUrl() {
-        return diffUrl;
-    }
-
-    public void setDiffUrl(String diffUrl) {
-        this.diffUrl = diffUrl;
-    }
-
-    public boolean isGit() {
-        return isGit;
-    }
-
-    public void setGit(boolean git) {
-        isGit = git;
-    }
-
-    public boolean isIncrement() {
-        return isIncrement;
-    }
-
-    public void setIncrement(boolean increment) {
-        isIncrement = increment;
-    }
 
     @Override
     public String toString() {

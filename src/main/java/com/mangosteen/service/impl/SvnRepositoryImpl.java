@@ -2,9 +2,8 @@ package com.mangosteen.service.impl;
 
 import com.mangosteen.service.CodeRepository;
 import com.mangosteen.tools.SvnManager;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -19,9 +18,8 @@ import java.util.List;
  * @date 2019/3/2010:47 AM
  */
 @Service("svnImpl")
+@Slf4j
 public class SvnRepositoryImpl implements CodeRepository {
-
-    private static final Logger logger = LoggerFactory.getLogger(SvnRepositoryImpl.class);
 
     @Override
     public boolean downLoad(File repository, String branch) {
@@ -31,7 +29,7 @@ public class SvnRepositoryImpl implements CodeRepository {
         try {
             svnManager.checkOutModel(repository,branch);
         } catch (Exception e) {
-            logger.error("svn 检出失败，详情为:{}",e.getMessage());
+            log.error("svn 检出失败，详情为:{}",e.getMessage());
             return false;
         }
         return true;
@@ -44,7 +42,7 @@ public class SvnRepositoryImpl implements CodeRepository {
         try {
             svnManager.updateModel(file);
         } catch (Exception e) {
-            logger.error("svn 更新失败，详情为:{}",e.getMessage());
+            log.error("svn 更新失败，详情为:{}",e.getMessage());
             return false;
         }
         return true;
@@ -57,7 +55,7 @@ public class SvnRepositoryImpl implements CodeRepository {
         try {
             svnManager.doDiff(baseUrl,diffUrl,diffRestFile);
         } catch (Exception e) {
-            logger.error("svn diff fail：{}",e.getMessage());
+            log.error("svn diff fail：{}",e.getMessage());
 
         }
         List<String> changfiles=new ArrayList<>();
@@ -73,7 +71,7 @@ public class SvnRepositoryImpl implements CodeRepository {
             }
 
         } catch (Exception e) {
-            logger.error("pase svn diffFile fail:{}",e.getMessage());
+            log.error("pase svn diffFile fail:{}",e.getMessage());
         }
 
 
