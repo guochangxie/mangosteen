@@ -39,7 +39,7 @@
                     <thead>
                     <tr th:if="${!#lists.isEmpty(executeRecords)}">
                         <th width="45%" style="text-align:center;">分支</th>
-                        <th width="10%" style="text-align:center;">执行时间</th>
+                        <th width="15%" style="text-align:center;">执行时间</th>
                         <th width="20%" style="text-align:center;">IP</th>
                         <th style="text-align:center;">操作</th>
                     </tr>
@@ -49,7 +49,7 @@
                         <input  type="hidden" name="reportPath" th:value="${executeRecord.reportPath}">
                         <input  type="hidden" name="projectName" th:value="${executeRecord.projectName}">
                         <td th:text="${executeRecord.codeBranch}" width="45%"></td>
-                        <td th:text="${#dates.format(executeRecord.executeTime, 'yyyy-MM-dd HH:mm:ss')}" width="10%"></td>
+                        <td th:text="${#dates.format(executeRecord.executeTime, 'yyyy-MM-dd HH:mm:ss')}" width="15%"></td>
                         <td th:text="${executeRecord.serverIp}" width="20%"></td>
                         <td class="process" >
                             <button type="button" class="btn btn-success btn-sm" th:onclick="'javascript:toReportDetail(this)'">查看覆盖率</button>
