@@ -31,9 +31,8 @@ public interface CodeRepository {
      *
      * @param baseUrl
      * @param diffUrl
-     * @param diffRestFile 对比结果文件
      * @return 变更的方法列表
      */
-     List<String> diff(String baseUrl, String diffUrl,String diffRestFile);
+     List<String> diff(String baseUrl, String diffUrl);
 
 }

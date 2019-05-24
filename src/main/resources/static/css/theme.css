@@ -292,7 +292,7 @@ section {
 
 .page-container2 {
     background: #f2f2f2;
-    padding-left: 300px;
+    padding-left: 200px;
 }
 
 @media (max-width: 991px) {
@@ -2104,7 +2104,7 @@ section {
 }
 
 .menu-sidebar2 {
-    width: 300px;
+    width: 200px;
     position: fixed;
     left: 0;
     top: 0;
@@ -2295,7 +2295,7 @@ section {
     z-index: 1001;
     top: 0;
     right: 0;
-    left: 300px;
+    left: 200px;
 }
 
 @media (max-width: 991px) {

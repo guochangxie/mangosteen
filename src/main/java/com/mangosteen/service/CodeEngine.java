@@ -87,8 +87,8 @@ public class CodeEngine {
         return true;
     }
 
-    List<String> getDiffClassFile(CodeRepository codeRepository,String baseUrl, String diffUrl, String diffRestFile){
+    List<String> getDiffClassFile(CodeRepository codeRepository,String baseUrl, String diffUrl){
 
-        return codeRepository.diff(baseUrl,diffUrl,diffRestFile);
+        return codeRepository.diff(baseUrl,diffUrl);
     }
 }

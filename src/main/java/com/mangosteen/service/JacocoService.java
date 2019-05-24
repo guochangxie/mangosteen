@@ -153,8 +153,7 @@ public class JacocoService {
                 reportGenerator.setSourceDirectory(new File(baseFile,"source/src/main/java"));
                 reportGenerator.setReportDirectory(new File(baseFile,dumpFilePath+"coveragereport"));
                 if (executeRecords.isIncrement()){
-                    String diffResut=baseFilePath+dumpFilePath+"difflog.txt";
-                    List<String> diffClassFile = codeCompilingEngine.getDiffClassFile(codeRepository, executeRecords.getCodeBranch(), executeRecords.getDiffUrl(), diffResut);
+                    List<String> diffClassFile = codeCompilingEngine.getDiffClassFile(codeRepository, executeRecords.getCodeBranch(), executeRecords.getDiffUrl());
                     reportGenerator.setChangefiles(diffClassFile);
 
                 }

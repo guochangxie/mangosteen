@@ -1,5 +1,6 @@
 package com.mangosteen.tools;
 
+import org.apache.commons.lang3.StringUtils;
 import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
@@ -12,6 +13,8 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.*;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,7 +23,7 @@ public class SvnManager {
     private SVNClientManager ourClientManager;
     private SVNURL repositoryOptUrl;
     private String username="test_conf";
-    private String password="xxxxxxx";
+    private String password="xxx";
 
     private Lock lock = new ReentrantLock();
 
@@ -213,6 +216,35 @@ public class SvnManager {
             SVNFileUtil.closeFile(outputStream);
 
         }
+    }
+
+
+    public List<String> doDiffStatus(String url, String url2){
+        lock.lock();
+        List<String> changeList=new LinkedList<>();
+
+        try {
+
+            SVNDiffClient diffClient = ourClientManager.getDiffClient();
+            SVNURL svnUrl= SVNURL.parseURIEncoded(url);
+            SVNURL svnUr2= SVNURL.parseURIEncoded(url2);
+
+            diffClient.doDiffStatus(svnUrl, SVNRevision.HEAD, svnUr2, SVNRevision.HEAD, SVNDepth.INFINITY, true, new ISVNDiffStatusHandler() {
+                @Override
+                public void handleDiffStatus(SVNDiffStatus diffStatus) throws SVNException {
+                    String fileName=diffStatus.getFile().getName();
+                    if(fileName.endsWith(".java"))
+                    changeList.add(StringUtils.replace(fileName,".java",".class"));
+
+                }
+            });
+
+        } catch (SVNException e) {
+            e.printStackTrace();
+        } finally{
+            lock.unlock();
+        }
+        return changeList;
     }
     public String getUsername() {
         return username;

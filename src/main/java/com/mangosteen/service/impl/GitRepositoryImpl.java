@@ -80,7 +80,7 @@ public class GitRepositoryImpl implements CodeRepository {
     }
 
     @Override
-    public List<String> diff(String baseUrl, String diffUrl, String diffRestFile) {
+    public List<String> diff(String baseUrl, String diffUrl) {
         List<String> changeClass=new ArrayList<>();
         try {
             DiffCommand diff = Git.open(new File(diffUrl)).diff();

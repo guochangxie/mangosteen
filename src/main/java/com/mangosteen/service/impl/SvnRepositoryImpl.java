@@ -49,33 +49,11 @@ public class SvnRepositoryImpl implements CodeRepository {
     }
 
     @Override
-    public List<String> diff(String baseUrl, String diffUrl,String diffRestFile) {
+    public List<String> diff(String baseUrl, String diffUrl) {
         SvnManager svnManager=new SvnManager();
         svnManager.init();
-        try {
-            svnManager.doDiff(baseUrl,diffUrl,diffRestFile);
-        } catch (Exception e) {
-            log.error("svn diff fail：{}",e.getMessage());
+        return svnManager.doDiffStatus(baseUrl, diffUrl);
 
-        }
-        List<String> changfiles=new ArrayList<>();
-        try {
-            FileReader fileReader = new FileReader(new File(diffRestFile));
-            BufferedReader bufferedReader=new BufferedReader(fileReader);
-            String  line =null;
-            while((line=bufferedReader.readLine()) != null){
-                if (line.startsWith("Index:")&&(line.endsWith(".java"))){
-                    String chanagefile= StringUtils.substringAfterLast(line,"Index:").trim();
-                    changfiles.add(StringUtils.substringAfterLast(chanagefile,"/").replace(".java",".class"));
-                }
-            }
-
-        } catch (Exception e) {
-            log.error("pase svn diffFile fail:{}",e.getMessage());
-        }
-
-
-        return changfiles;
     }
 
 }
